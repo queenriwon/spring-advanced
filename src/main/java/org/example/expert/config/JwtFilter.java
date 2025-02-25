@@ -37,6 +37,7 @@ public class JwtFilter implements Filter {
             return;
         }
 
+        // 로그인 검증
         String bearerJwt = httpRequest.getHeader("Authorization");
 
         if (bearerJwt == null) {
@@ -45,7 +46,7 @@ public class JwtFilter implements Filter {
             return;
         }
 
-        String jwt = jwtUtil.substringToken(bearerJwt);
+        String jwt = jwtUtil.substringToken(bearerJwt); //베어러 제거
 
         try {
             // JWT 유효성 검사와 claims 추출
@@ -55,21 +56,23 @@ public class JwtFilter implements Filter {
                 return;
             }
 
-            UserRole userRole = UserRole.valueOf(claims.get("userRole", String.class));
+//            UserRole userRole = UserRole.valueOf(claims.get("userRole", String.class));
 
+            // 검증만하고 jwt에 담아줌
             httpRequest.setAttribute("userId", Long.parseLong(claims.getSubject()));
             httpRequest.setAttribute("email", claims.get("email"));
             httpRequest.setAttribute("userRole", claims.get("userRole"));
 
-            if (url.startsWith("/admin")) {
-                // 관리자 권한이 없는 경우 403을 반환합니다.
-                if (!UserRole.ADMIN.equals(userRole)) {
-                    httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "관리자 권한이 없습니다.");
-                    return;
-                }
-                chain.doFilter(request, response);
-                return;
-            }
+
+//            if (url.startsWith("/admin")) {
+//                // 관리자 권한이 없는 경우 403을 반환합니다.
+//                if (!UserRole.ADMIN.equals(userRole)) {
+//                    httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "관리자 권한이 없습니다.");
+//                    return;
+//                }
+//                chain.doFilter(request, response);
+//                return;
+//            }
 
             chain.doFilter(request, response);
         } catch (SecurityException | MalformedJwtException e) {

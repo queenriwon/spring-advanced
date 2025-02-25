@@ -26,4 +26,7 @@ public class AuthController {
     public SigninResponse signin(@Valid @RequestBody SigninRequest signinRequest) {
         return authService.signin(signinRequest);
     }
+
+    // 리프레시 토큰으로 엑세스 토큰 발급 하는 api 작성
+
 }

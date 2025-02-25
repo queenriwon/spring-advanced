@@ -22,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentService {
 
-    private final TodoRepository todoRepository;
+    private final TodoRepository todoRepository; // 서비스로 리팩토링
     private final CommentRepository commentRepository;
 
     @Transactional
