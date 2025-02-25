@@ -41,7 +41,10 @@ public class AuthService {
         );
         User savedUser = userRepository.save(newUser);
 
+        // 토큰발행
         String bearerToken = jwtUtil.createToken(savedUser.getId(), savedUser.getEmail(), userRole);
+
+        // 리프레시 토큰까지 (리프레시는 DB에 저장 --> 유효성은 DB)
 
         return new SignupResponse(bearerToken);
     }
