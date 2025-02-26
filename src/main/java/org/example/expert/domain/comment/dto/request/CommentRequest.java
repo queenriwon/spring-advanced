@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentSaveRequest {
+public class CommentRequest {
 
     @NotBlank(message = "댓글 내용은 필수 입력값입니다.")
     private String contents;
