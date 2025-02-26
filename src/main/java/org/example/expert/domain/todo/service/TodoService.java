@@ -81,11 +81,6 @@ public class TodoService {
         );
     }
 
-    public Todo findTodoByIdOrElseThrow(long todoId) {
-        return todoRepository.findByIdWithUser(todoId)
-                .orElseThrow(() -> new InvalidRequestException("Todo not found"));
-    }
-
     @Transactional
     public TodoResponse updateTodo(AuthUser authUser, Long todoId, TodoRequest todoRequest) {
         Todo todo = findTodoByIdOrElseThrow(todoId);
@@ -118,5 +113,10 @@ public class TodoService {
             throw new InvalidRequestException("일정 작성자가 아닙니다.");
         }
         todoRepository.delete(todo);
+    }
+
+    public Todo findTodoByIdOrElseThrow(long todoId) {
+        return todoRepository.findByIdWithUser(todoId)
+                .orElseThrow(() -> new InvalidRequestException("Todo not found"));
     }
 }
