@@ -44,6 +44,7 @@ public class UserService {
         user.changePassword(passwordEncoder.encode(userChangePasswordRequest.getNewPassword()));
     }
 
+    @Transactional
     public void deleteUser(
             Long userId,
             UserDeleteRequest userDeleteRequest) {

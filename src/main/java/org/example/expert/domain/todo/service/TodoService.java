@@ -109,4 +109,14 @@ public class TodoService {
                 todo.getModifiedAt()
         );
     }
+
+    @Transactional
+    public void deleteTodo(Long userId, Long todoId) {
+        Todo todo = findTodoByIdOrElseThrow(todoId);
+
+        if (!ObjectUtils.nullSafeEquals(todo.getUser().getId(), userId)) {
+            throw new InvalidRequestException("일정 작성자가 아닙니다.");
+        }
+        todoRepository.delete(todo);
+    }
 }
