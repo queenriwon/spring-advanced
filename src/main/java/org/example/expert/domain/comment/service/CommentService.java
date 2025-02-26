@@ -89,7 +89,7 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
-    private Comment findCommentByIdOrElseThrow(Long commentId) {
+    public Comment findCommentByIdOrElseThrow(Long commentId) {
         return commentRepository.findCommentById(commentId)
                 .orElseThrow(() -> new InvalidRequestException("Comment not found"));
     }

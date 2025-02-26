@@ -33,6 +33,10 @@ public class Todo extends Timestamped {
     @OneToMany(mappedBy = "todo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Manager> managers = new ArrayList<>();
 
+    public Todo(Long id) {
+        this.id = id;
+    }
+
     public Todo(String title, String contents, String weather, User user) {
         this.title = title;
         this.contents = contents;

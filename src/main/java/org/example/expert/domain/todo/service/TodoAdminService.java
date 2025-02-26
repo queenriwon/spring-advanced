@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 public class TodoAdminService {
 
     private final TodoRepository todoRepository;
+    private final TodoService todoService;
 
     public void deleteTodo(long todoId) {
+        todoService.findTodoByIdOrElseThrow(todoId);
         todoRepository.deleteById(todoId);
     }
 }
