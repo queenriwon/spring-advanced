@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.expert.domain.common.annotation.Auth;
 import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.domain.user.dto.request.UserChangePasswordRequest;
+import org.example.expert.domain.user.dto.request.UserDeleteRequest;
 import org.example.expert.domain.user.dto.response.UserResponse;
 import org.example.expert.domain.user.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -27,5 +28,12 @@ public class UserController {
             @Valid @RequestBody UserChangePasswordRequest userChangePasswordRequest
     ) {
         userService.changePassword(authUser.getId(), userChangePasswordRequest);
+    }
+
+    @PostMapping("/users/delete")
+    public void deleteUser(
+            @Auth AuthUser authUser,
+            @Valid @RequestBody UserDeleteRequest userDeleteRequest) {
+        userService.deleteUser(authUser.getId(), userDeleteRequest);
     }
 }
