@@ -2,9 +2,7 @@ package org.example.expert.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.expert.config.config.PasswordEncoder;
-import org.example.expert.config.exception.custom.AuthException;
 import org.example.expert.config.exception.custom.InvalidRequestException;
-import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.domain.user.dto.request.UserChangePasswordRequest;
 import org.example.expert.domain.user.dto.request.UserDeleteRequest;
 import org.example.expert.domain.user.dto.response.UserResponse;
