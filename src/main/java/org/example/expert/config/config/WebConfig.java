@@ -1,5 +1,8 @@
-package org.example.expert.config;
+package org.example.expert.config.config;
 
+import org.example.expert.config.argument.AuthUserArgumentResolver;
+import org.example.expert.config.interceptor.AdminAuthInterceptor;
+import org.example.expert.config.interceptor.LoggingInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

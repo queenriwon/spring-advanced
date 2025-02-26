@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TodoSaveRequest {
 
-    @NotBlank
+    @NotBlank(message = "일정 제목은 필수 입력값입니다.")
     private String title;
-    @NotBlank
+    @NotBlank(message = "일정 내용은 필수 입력값입니다.")
     private String contents;
 }
