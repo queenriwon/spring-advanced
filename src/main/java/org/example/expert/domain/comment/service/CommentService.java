@@ -80,6 +80,16 @@ public class CommentService {
         );
     }
 
+    @Transactional
+    public void deleteComment(Long userId, Long commentId) {
+        Comment comment = findCommentByIdOrElseThrow(commentId);
+
+        if (!ObjectUtils.nullSafeEquals(comment.getUser().getId(), userId)) {
+            throw new InvalidRequestException("댓글 작성자가 아닙니다.");
+        }
+        commentRepository.delete(comment);
+    }
+
     private Comment findCommentByIdOrElseThrow(Long commentId) {
         return commentRepository.findCommentById(commentId)
                 .orElseThrow(() -> new InvalidRequestException("Comment not found"));
