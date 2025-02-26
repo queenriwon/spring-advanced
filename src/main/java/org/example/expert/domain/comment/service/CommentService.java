@@ -10,6 +10,7 @@ import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.domain.common.exception.InvalidRequestException;
 import org.example.expert.domain.todo.entity.Todo;
 import org.example.expert.domain.todo.repository.TodoRepository;
+import org.example.expert.domain.todo.service.TodoService;
 import org.example.expert.domain.user.dto.response.UserResponse;
 import org.example.expert.domain.user.entity.User;
 import org.springframework.stereotype.Service;
@@ -22,14 +23,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentService {
 
-    private final TodoRepository todoRepository; // 서비스로 리팩토링
     private final CommentRepository commentRepository;
+    private final TodoService todoService;
 
     @Transactional
     public CommentSaveResponse saveComment(AuthUser authUser, long todoId, CommentSaveRequest commentSaveRequest) {
         User user = User.fromAuthUser(authUser);
-        Todo todo = todoRepository.findById(todoId).orElseThrow(() ->
-                new InvalidRequestException("Todo not found"));
+        Todo todo = todoService.findTodoByIdOrElseThrow(todoId);
 
         Comment newComment = new Comment(
                 commentSaveRequest.getContents(),

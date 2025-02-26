@@ -13,11 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserAdminService {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Transactional
     public void changeUserRole(long userId, UserRoleChangeRequest userRoleChangeRequest) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new InvalidRequestException("User not found"));
+        User user = userService.findUserByIdOrElseThrow(userId);
         user.updateRole(UserRole.of(userRoleChangeRequest.getRole()));
     }
 }
