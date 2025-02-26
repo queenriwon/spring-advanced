@@ -9,9 +9,11 @@ import org.example.expert.domain.manager.entity.Manager;
 import org.example.expert.domain.manager.repository.ManagerRepository;
 import org.example.expert.domain.todo.entity.Todo;
 import org.example.expert.domain.todo.repository.TodoRepository;
+import org.example.expert.domain.todo.service.TodoService;
 import org.example.expert.domain.user.entity.User;
 import org.example.expert.domain.user.enums.UserRole;
 import org.example.expert.domain.user.repository.UserRepository;
+import org.example.expert.domain.user.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,9 +34,9 @@ class ManagerServiceTest {
     @Mock
     private ManagerRepository managerRepository;
     @Mock
-    private UserRepository userRepository;
+    private UserService userService;
     @Mock
-    private TodoRepository todoRepository;
+    private TodoService todoService;
     @InjectMocks
     private ManagerService managerService;
 
@@ -42,7 +44,8 @@ class ManagerServiceTest {
     public void manager_목록_조회_시_Todo가_없다면_InvalidRequestException_에러를_던진다() {
         // given
         long todoId = 1L;
-        given(todoRepository.findById(todoId)).willReturn(Optional.empty());
+//        given(todoRepository.findById(todoId)).willReturn(Optional.empty());
+        given(todoService.findTodoByIdOrElseThrow(todoId)).willThrow(new InvalidRequestException("Todo not found"));
 
         // when & then
         InvalidRequestException exception = assertThrows(InvalidRequestException.class, () -> managerService.getManagers(todoId));
@@ -61,7 +64,8 @@ class ManagerServiceTest {
 
         ManagerSaveRequest managerSaveRequest = new ManagerSaveRequest(managerUserId);
 
-        given(todoRepository.findById(todoId)).willReturn(Optional.of(todo));
+//        given(todoRepository.findById(todoId)).willReturn(Optional.of(todo));
+        given(todoService.findTodoByIdOrElseThrow(todoId)).willReturn(todo);
 
         // when & then
         InvalidRequestException exception = assertThrows(InvalidRequestException.class, () ->
@@ -82,7 +86,8 @@ class ManagerServiceTest {
         Manager mockManager = new Manager(todo.getUser(), todo);
         List<Manager> managerList = List.of(mockManager);
 
-        given(todoRepository.findById(todoId)).willReturn(Optional.of(todo));
+//        given(todoRepository.findById(todoId)).willReturn(Optional.of(todo));
+        given(todoService.findTodoByIdOrElseThrow(todoId)).willReturn(todo);
         given(managerRepository.findByTodoIdWithUser(todoId)).willReturn(managerList);
 
         // when
@@ -109,8 +114,10 @@ class ManagerServiceTest {
 
         ManagerSaveRequest managerSaveRequest = new ManagerSaveRequest(managerUserId); // request dto 생성
 
-        given(todoRepository.findById(todoId)).willReturn(Optional.of(todo));
-        given(userRepository.findById(managerUserId)).willReturn(Optional.of(managerUser));
+//        given(todoRepository.findById(todoId)).willReturn(Optional.of(todo));
+//        given(userRepository.findById(managerUserId)).willReturn(Optional.of(managerUser));
+        given(todoService.findTodoByIdOrElseThrow(todoId)).willReturn(todo);
+        given(userService.findUserByIdOrElseThrow(managerUserId)).willReturn(managerUser);
         given(managerRepository.save(any(Manager.class))).willAnswer(invocation -> invocation.getArgument(0));
 
         // when
