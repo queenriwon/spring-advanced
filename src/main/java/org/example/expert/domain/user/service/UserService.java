@@ -2,8 +2,11 @@ package org.example.expert.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.expert.config.config.PasswordEncoder;
+import org.example.expert.config.exception.custom.AuthException;
 import org.example.expert.config.exception.custom.InvalidRequestException;
+import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.domain.user.dto.request.UserChangePasswordRequest;
+import org.example.expert.domain.user.dto.request.UserDeleteRequest;
 import org.example.expert.domain.user.dto.response.UserResponse;
 import org.example.expert.domain.user.entity.User;
 import org.example.expert.domain.user.repository.UserRepository;
@@ -44,5 +47,16 @@ public class UserService {
     public User findUserByIdOrElseThrow(long userId) {
         return userRepository.findById(userId).orElseThrow(
                 () -> new InvalidRequestException("User not found"));
+    }
+
+    public void deleteUser(
+            Long userId,
+            UserDeleteRequest userDeleteRequest) {
+        User user = findUserByIdOrElseThrow(userId);
+
+        if (!passwordEncoder.matches(userDeleteRequest.getPassword(), user.getPassword())) {
+            throw new InvalidRequestException("잘못된 비밀번호입니다.");
+        }
+        userRepository.delete(user);
     }
 }
