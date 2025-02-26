@@ -31,6 +31,10 @@ public class Comment extends Timestamped {
         this.todo = todo;
     }
 
+    public Comment(Long id) {
+        this.id = id;
+    }
+
     public void update(String contents) {
         this.contents = contents;
     }
