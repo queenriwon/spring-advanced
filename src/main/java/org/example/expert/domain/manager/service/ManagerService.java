@@ -46,10 +46,9 @@ public class ManagerService {
         }
 
         Manager newManagerUser = new Manager(managerUser, todo);
-        Manager savedManagerUser = managerRepository.save(newManagerUser);
-
+        managerRepository.save(newManagerUser);
         return new ManagerSaveResponse(
-                savedManagerUser.getId(),
+                newManagerUser.getId(),
                 new UserResponse(managerUser.getId(), managerUser.getEmail())
         );
     }
@@ -90,7 +89,7 @@ public class ManagerService {
         managerRepository.delete(manager);
     }
 
-    private Manager findManagerByIdOrElseThrow(long managerId) {
+    public Manager findManagerByIdOrElseThrow(long managerId) {
         return managerRepository.findById(managerId)
                 .orElseThrow(() -> new InvalidRequestException("Manager not found"));
     }
