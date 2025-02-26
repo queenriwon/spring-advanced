@@ -27,23 +27,23 @@ public class TodoService {
     private final WeatherClient weatherClient;
 
     @Transactional
-    public TodoSaveResponse saveTodo(AuthUser authUser, TodoRequest todoSaveRequest) {
+    public TodoSaveResponse saveTodo(AuthUser authUser, TodoRequest todoRequest) {
         User user = User.fromAuthUser(authUser);
 
         String weather = weatherClient.getTodayWeather();
 
         Todo newTodo = new Todo(
-                todoSaveRequest.getTitle(),
-                todoSaveRequest.getContents(),
+                todoRequest.getTitle(),
+                todoRequest.getContents(),
                 weather,
                 user
         );
-        Todo savedTodo = todoRepository.save(newTodo);
+        todoRepository.save(newTodo);
 
         return new TodoSaveResponse(
-                savedTodo.getId(),
-                savedTodo.getTitle(),
-                savedTodo.getContents(),
+                newTodo.getId(),
+                newTodo.getTitle(),
+                newTodo.getContents(),
                 weather,
                 new UserResponse(user.getId(), user.getEmail())
         );

@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
@@ -43,11 +42,11 @@ public class UserServiceTest {
         given(userRepository.findById(userId)).willReturn(Optional.of(user));
 
         // when
-        User finduser = userService.findUserByIdOrElseThrow(userId);
+        User findUser = userService.findUserByIdOrElseThrow(userId);
 
         // then
-        assertThat(finduser).isNotNull();
-        assertThat(finduser.getId()).isEqualTo(userId);
+        assertThat(findUser).isNotNull();
+        assertThat(findUser.getId()).isEqualTo(userId);
     }
 
     @Test
