@@ -1,6 +1,6 @@
 package org.example.expert.domain.comment.service;
 
-import org.example.expert.domain.comment.dto.request.CommentSaveRequest;
+import org.example.expert.domain.comment.dto.request.CommentRequest;
 import org.example.expert.domain.comment.dto.response.CommentSaveResponse;
 import org.example.expert.domain.comment.entity.Comment;
 import org.example.expert.domain.comment.repository.CommentRepository;
@@ -16,8 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,7 +38,7 @@ class CommentServiceTest {
     public void comment_등록_중_할일을_찾지_못해_에러가_발생한다() {
         // given
         long todoId = 1;
-        CommentSaveRequest request = new CommentSaveRequest("contents");
+        CommentRequest request = new CommentRequest("contents");
         AuthUser authUser = new AuthUser(1L, "email", UserRole.USER);
 
         given(todoService.findTodoByIdOrElseThrow(anyLong())).willThrow(new InvalidRequestException("Todo not found"));
@@ -58,7 +56,7 @@ class CommentServiceTest {
     public void comment를_정상적으로_등록한다() {
         // given
         long todoId = 1;
-        CommentSaveRequest request = new CommentSaveRequest("contents");
+        CommentRequest request = new CommentRequest("contents");
         AuthUser authUser = new AuthUser(1L, "email", UserRole.USER);
         User user = User.fromAuthUser(authUser);
         Todo todo = new Todo("title", "title", "contents", user);
