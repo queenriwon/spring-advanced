@@ -44,11 +44,6 @@ public class UserService {
         user.changePassword(passwordEncoder.encode(userChangePasswordRequest.getNewPassword()));
     }
 
-    public User findUserByIdOrElseThrow(long userId) {
-        return userRepository.findById(userId).orElseThrow(
-                () -> new InvalidRequestException("User not found"));
-    }
-
     public void deleteUser(
             Long userId,
             UserDeleteRequest userDeleteRequest) {
@@ -58,5 +53,10 @@ public class UserService {
             throw new InvalidRequestException("잘못된 비밀번호입니다.");
         }
         userRepository.delete(user);
+    }
+
+    public User findUserByIdOrElseThrow(long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new InvalidRequestException("User not found"));
     }
 }
