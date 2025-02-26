@@ -39,10 +39,10 @@ public class AuthService {
                 encodedPassword,
                 userRole
         );
-        User savedUser = userRepository.save(newUser);
+        userRepository.save(newUser);
 
         // 토큰발행
-        String bearerToken = jwtUtil.createToken(savedUser.getId(), savedUser.getEmail(), userRole);
+        String bearerToken = jwtUtil.createToken(newUser.getId(), newUser.getEmail(), userRole);
 
         // 리프레시 토큰까지 (리프레시는 DB에 저장 --> 유효성은 DB)
 
@@ -51,7 +51,7 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public SigninResponse signin(SigninRequest signinRequest) {
-        User user = findUserByEmailOrElseThrow(signinRequest);
+        User user = findUserByEmailOrElseThrow(signinRequest.getEmail());
 
         // 로그인 시 이메일과 비밀번호가 일치하지 않을 경우 401을 반환합니다.
         if (!passwordEncoder.matches(signinRequest.getPassword(), user.getPassword())) {
@@ -63,8 +63,8 @@ public class AuthService {
         return new SigninResponse(bearerToken);
     }
 
-    private User findUserByEmailOrElseThrow(SigninRequest signinRequest) {
-        return userRepository.findByEmail(signinRequest.getEmail()).orElseThrow(
+    public User findUserByEmailOrElseThrow(String email) {
+        return userRepository.findByEmail(email).orElseThrow(
                 () -> new InvalidRequestException("가입되지 않은 유저입니다."));
     }
 }

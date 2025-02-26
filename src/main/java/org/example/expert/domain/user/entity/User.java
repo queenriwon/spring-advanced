@@ -49,6 +49,10 @@ public class User extends Timestamped {
         this.id = id;
     }
 
+    public User(String email) {
+        this.email = email;
+    }
+
     public User(long id, String email, String password, UserRole userRole) {
         this.id = id;
         this.email = email;
