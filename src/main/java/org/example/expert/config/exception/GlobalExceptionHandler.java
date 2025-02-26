@@ -1,12 +1,10 @@
 package org.example.expert.config.exception;
 
-import org.aspectj.bridge.IMessage;
 import org.example.expert.config.exception.custom.AuthException;
 import org.example.expert.config.exception.custom.InvalidRequestException;
 import org.example.expert.config.exception.custom.ServerException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
