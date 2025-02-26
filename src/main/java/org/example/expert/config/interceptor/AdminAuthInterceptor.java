@@ -1,9 +1,9 @@
-package org.example.expert.config;
+package org.example.expert.config.interceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.example.expert.domain.auth.exception.AuthException;
+import org.example.expert.config.exception.custom.AuthException;
 import org.example.expert.domain.user.enums.UserRole;
 import org.springframework.web.servlet.HandlerInterceptor;
 

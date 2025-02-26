@@ -1,7 +1,7 @@
-package org.example.expert.config;
+package org.example.expert.config.argument;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.example.expert.domain.auth.exception.AuthException;
+import org.example.expert.config.exception.custom.AuthException;
 import org.example.expert.domain.common.annotation.Auth;
 import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.domain.user.enums.UserRole;

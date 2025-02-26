@@ -1,14 +1,18 @@
-package org.example.expert.config;
+package org.example.expert.config.exception;
 
-import org.example.expert.domain.auth.exception.AuthException;
-import org.example.expert.domain.common.exception.InvalidRequestException;
-import org.example.expert.domain.common.exception.ServerException;
+import org.aspectj.bridge.IMessage;
+import org.example.expert.config.exception.custom.AuthException;
+import org.example.expert.config.exception.custom.InvalidRequestException;
+import org.example.expert.config.exception.custom.ServerException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestControllerAdvice
@@ -32,7 +36,17 @@ public class GlobalExceptionHandler {
         return getErrorResponse(status, ex.getMessage());
     }
 
-    public ResponseEntity<Map<String, Object>> getErrorResponse(HttpStatus status, String message) {
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, Object>> handleValidationFailed(MethodArgumentNotValidException exception) {
+        List<String> validFailedList = exception.getBindingResult().getFieldErrors()
+                .stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .toList();
+
+        return getErrorResponse(HttpStatus.BAD_REQUEST, validFailedList);
+    }
+
+    public <T> ResponseEntity<Map<String, Object>> getErrorResponse(HttpStatus status, T message) {
         Map<String, Object> errorResponse = new HashMap<>();
         errorResponse.put("status", status.name());
         errorResponse.put("code", status.value());
