@@ -7,7 +7,6 @@ import org.example.expert.domain.comment.repository.CommentRepository;
 import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.config.exception.custom.InvalidRequestException;
 import org.example.expert.domain.todo.entity.Todo;
-import org.example.expert.domain.todo.repository.TodoRepository;
 import org.example.expert.domain.todo.service.TodoService;
 import org.example.expert.domain.user.entity.User;
 import org.example.expert.domain.user.enums.UserRole;
@@ -27,8 +26,6 @@ class CommentServiceTest {
 
     @Mock
     private CommentRepository commentRepository;
-    @Mock
-    private TodoRepository todoRepository;
     @Mock
     private TodoService todoService;
     @InjectMocks

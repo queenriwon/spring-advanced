@@ -1,6 +1,7 @@
 package org.example.expert.domain.user.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.expert.domain.common.dto.AuthUser;
@@ -41,6 +42,17 @@ public class User extends Timestamped {
     private User(Long id, String email, UserRole userRole) {
         this.id = id;
         this.email = email;
+        this.userRole = userRole;
+    }
+
+    public User(Long id) {
+        this.id = id;
+    }
+
+    public User(long id, String email, String password, UserRole userRole) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
         this.userRole = userRole;
     }
 
