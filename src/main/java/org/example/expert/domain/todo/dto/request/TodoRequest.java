@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TodoSaveRequest {
+public class TodoRequest {
 
     @NotBlank(message = "일정 제목은 필수 입력값입니다.")
     private String title;

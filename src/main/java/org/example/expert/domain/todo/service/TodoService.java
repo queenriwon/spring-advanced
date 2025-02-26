@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.expert.client.WeatherClient;
 import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.config.exception.custom.InvalidRequestException;
-import org.example.expert.domain.todo.dto.request.TodoSaveRequest;
+import org.example.expert.domain.todo.dto.request.TodoRequest;
 import org.example.expert.domain.todo.dto.response.TodoResponse;
 import org.example.expert.domain.todo.dto.response.TodoSaveResponse;
 import org.example.expert.domain.todo.entity.Todo;
@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +27,7 @@ public class TodoService {
     private final WeatherClient weatherClient;
 
     @Transactional
-    public TodoSaveResponse saveTodo(AuthUser authUser, TodoSaveRequest todoSaveRequest) {
+    public TodoSaveResponse saveTodo(AuthUser authUser, TodoRequest todoSaveRequest) {
         User user = User.fromAuthUser(authUser);
 
         String weather = weatherClient.getTodayWeather();
@@ -83,5 +84,29 @@ public class TodoService {
     public Todo findTodoByIdOrElseThrow(long todoId) {
         return todoRepository.findByIdWithUser(todoId)
                 .orElseThrow(() -> new InvalidRequestException("Todo not found"));
+    }
+
+    @Transactional
+    public TodoResponse updateTodo(AuthUser authUser, Long todoId, TodoRequest todoRequest) {
+        Todo todo = findTodoByIdOrElseThrow(todoId);
+
+        if (!ObjectUtils.nullSafeEquals(todo.getUser().getId(), authUser.getId())) {
+            throw new InvalidRequestException("일정 작성자가 아닙니다.");
+        }
+
+        String todoTitle = todoRequest.getTitle() == null ? todo.getTitle() : todoRequest.getTitle();
+        String todoContents = todoRequest.getContents() == null ? todo.getContents() : todoRequest.getContents();
+
+        todo.update(todoTitle, todoContents);
+
+        return new TodoResponse(
+                todo.getId(),
+                todo.getTitle(),
+                todo.getContents(),
+                todo.getWeather(),
+                new UserResponse(authUser.getId(), authUser.getEmail()),
+                todo.getCreatedAt(),
+                todo.getModifiedAt()
+        );
     }
 }
