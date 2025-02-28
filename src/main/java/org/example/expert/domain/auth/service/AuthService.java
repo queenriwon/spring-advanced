@@ -1,19 +1,20 @@
 package org.example.expert.domain.auth.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.expert.config.config.JwtUtil;
 import org.example.expert.config.config.PasswordEncoder;
+import org.example.expert.domain.auth.dto.request.RefreshTokenRequest;
 import org.example.expert.domain.auth.dto.request.SigninRequest;
 import org.example.expert.domain.auth.dto.request.SignupRequest;
-import org.example.expert.domain.auth.dto.response.SigninResponse;
-import org.example.expert.domain.auth.dto.response.SignupResponse;
 import org.example.expert.config.exception.custom.AuthException;
 import org.example.expert.config.exception.custom.InvalidRequestException;
+import org.example.expert.domain.auth.dto.response.TokenResponse;
+import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.domain.user.entity.User;
 import org.example.expert.domain.user.enums.UserRole;
 import org.example.expert.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 @RequiredArgsConstructor
@@ -21,10 +22,10 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
+    private final TokenService tokenService;
 
     @Transactional
-    public SignupResponse signup(SignupRequest signupRequest) {
+    public TokenResponse signup(SignupRequest signupRequest) {
 
         if (userRepository.existsByEmail(signupRequest.getEmail())) {
             throw new InvalidRequestException("이미 존재하는 이메일입니다.");
@@ -34,23 +35,22 @@ public class AuthService {
 
         UserRole userRole = UserRole.of(signupRequest.getUserRole());
 
-        User newUser = new User(
+        User user = new User(
                 signupRequest.getEmail(),
                 encodedPassword,
                 userRole
         );
-        userRepository.save(newUser);
+        userRepository.save(user);
 
         // 토큰발행
-        String bearerToken = jwtUtil.createToken(newUser.getId(), newUser.getEmail(), userRole);
+        String accessToken = tokenService.createAccessToken(user);
+        String refreshToken = tokenService.createRefreshToken(user);
 
-        // 리프레시 토큰까지 (리프레시는 DB에 저장 --> 유효성은 DB)
-
-        return new SignupResponse(bearerToken);
+        return new TokenResponse(accessToken, refreshToken);
     }
 
     @Transactional(readOnly = true)
-    public SigninResponse signin(SigninRequest signinRequest) {
+    public TokenResponse login(SigninRequest signinRequest) {
         User user = findUserByEmailOrElseThrow(signinRequest.getEmail());
 
         // 로그인 시 이메일과 비밀번호가 일치하지 않을 경우 401을 반환합니다.
@@ -58,9 +58,27 @@ public class AuthService {
             throw new AuthException("잘못된 비밀번호입니다.");
         }
 
-        String bearerToken = jwtUtil.createToken(user.getId(), user.getEmail(), user.getUserRole());
+        // 토큰 발생 및 저장
+        String accessToken = tokenService.createAccessToken(user);
+        String refreshToken = tokenService.createRefreshToken(user);
 
-        return new SigninResponse(bearerToken);
+        return new TokenResponse(accessToken, refreshToken);
+    }
+
+    //로그아웃 추가 구현
+    @Transactional
+    public void logout(AuthUser authUser) {
+        tokenService.revokeRefreshToken(authUser.getId());
+    }
+
+    @Transactional
+    public TokenResponse reissueAccessToken(@RequestBody RefreshTokenRequest request) {
+        User user = tokenService.reissueToken(request);
+
+        String accessToken = tokenService.createAccessToken(user);
+        String refreshToken = tokenService.createRefreshToken(user);
+
+        return new TokenResponse(accessToken,refreshToken);
     }
 
     public User findUserByEmailOrElseThrow(String email) {
