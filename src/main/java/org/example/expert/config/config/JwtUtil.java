@@ -50,19 +50,6 @@ public class JwtUtil {
                         .compact();
     }
 
-//    //Refresh Token 생성 - 간단한 유저 정보만 저장(Access재발금용이라 그냥 유저 판단만 할 수 있을 정도만 필요하다)
-//    public String createRefreshToken(Long userId) {
-//        Date date = new Date();
-//
-//        return BEARER_PREFIX +
-//                Jwts.builder()
-//                        .setSubject(String.valueOf(userId))
-//                        .setExpiration(new Date(date.getTime() + REFRESH_TOKEN_TIME))
-//                        .setIssuedAt(date) // 발급일
-//                        .signWith(key, signatureAlgorithm) // 암호화 알고리즘
-//                        .compact();
-//    }
-
     public String substringToken(String tokenValue) {
         if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
             return tokenValue.substring(7);

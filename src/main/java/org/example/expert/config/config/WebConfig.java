@@ -22,11 +22,11 @@ public class WebConfig implements WebMvcConfigurer {
     // Interceptor 등록
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new AdminAuthInterceptor())
-                .order(1)
-                .addPathPatterns("/admin/**");
-        registry.addInterceptor(new LoggingInterceptor())
-                .order(2)
-                .addPathPatterns("/admin/**");
+//        registry.addInterceptor(new AdminAuthInterceptor())
+//                .order(1)
+//                .addPathPatterns("/admin/**");
+//        registry.addInterceptor(new LoggingInterceptor())
+//                .order(2)
+//                .addPathPatterns("/admin/**");
     }
 }
